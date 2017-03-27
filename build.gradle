@@ -1,0 +1,41 @@
+group 'edu.rpi.cogworks'
+version '0.0.1'
+
+ext {
+    // Dependency versions:
+    v_junit = '4.11'
+    v_gson = '2.8.0'
+}
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+
+apply plugin: 'application'
+mainClassName = 'edu.rpi.cogworks.retetris.App'
+
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.7.9"
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.google.code.gson', name: 'gson', version: "$v_gson"
+    testCompile group: 'junit', name: 'junit', version: "$v_junit"
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src']
+        resources.srcDirs = ['src/res']
+    }
+    test {
+        java.srcDirs = ['test']
+        resources.srcDirs = ['test/res', 'src/res']
+    }
+}
