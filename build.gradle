@@ -1,57 +1,27 @@
-// Plugin dependencies
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        classpath group: 'org.junit.platform', name: 'junit-platform-gradle-plugin', version: '1.0.0'
-    }
-}
-
-// Plugins
-apply plugin: 'org.junit.platform.gradle.plugin'
-apply plugin: 'application'
-
-// App information
 group 'edu.rpi.cogworks'
-version '0.0.0'
 
-// Java version
-sourceCompatibility = 1.8
-// Java main class
-mainClassName = 'edu.rpi.cogworks.retetris.App'
+subprojects {
+    // Let's use a single build directory for all sub projects
+    buildDir = new File(rootProject.buildDir, project.name)
 
-ext {
-    // Versions
-    // App dependencies
-    v_gson = '2.8.0'
-    // Test dependencies
-    v_junit = '5.0.0'
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile group: 'com.google.code.gson', name: 'gson', version: v_gson
-
-    // Testing dependencies
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: v_junit
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: v_junit
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: v_junit
-}
-
-// Project structure
-sourceSets {
-    main {
-        java.srcDirs = ['src']
-        resources.srcDirs = []
+    // Specially configuration for Java sub-projects
+    plugins.withType(JavaPlugin) {
+        // Use a common source structure
+        sourceSets {
+            main {
+                java.srcDirs = ['src']
+                resources.srcDirs = []
+            }
+            test {
+                java.srcDirs = ['test']
+                resources.srcDirs = []
+            }
+        }
     }
-    test {
-        java.srcDirs = ['test']
-        resources.srcDirs = []
-    }
+}
+
+// Since each sub-project will only delete its
+// own buildDir, this task will delete the big one
+task clean(type: Delete) {
+    delete buildDir
 }
